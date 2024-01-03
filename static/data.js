@@ -44,7 +44,7 @@ function createDropdown(objs) {
     });
 
     // add a label for the dropdown
-    tableContainer.append("label").text(" Delete attribute: ");
+    tableContainer.append("label").text(" Remove attribute: ");
 
     const dropdownBtnDelete = tableContainer.append("select");
     dropdownBtnDelete
@@ -108,6 +108,7 @@ function createTable(objs) {
     createTableBody("Name");
 
     function createTableBody(sortKey) {
+        const tableContainer = d3.select("#table-container");
         try {
             if (sortInfo.order.toString() === d3.ascending.toString()) {
                 sortInfo.order = d3.descending;
@@ -138,9 +139,13 @@ function createTable(objs) {
             tbody
                 .selectAll("tr")
                     .data(selectedData)
-                    .on("click", () => {
-                        console.log("clicked");
-
+                    .on("click", function (d) {
+                        const selectedPlayer = d.Name;
+                        const selectedNation = d.Nationality;
+                        updateDotPlot(selectedPlayer, selectedNation);
+                        // highlight the selected row
+                        tbody.selectAll("tr").classed("selected", false);
+                        d3.select(this).classed("selected", true);
                     })
                 .selectAll("td")
                     .data(function (d) {
@@ -149,7 +154,6 @@ function createTable(objs) {
                     .text(function (d) {
                         return d.value;
                     });
-
         }
         catch (error) {
             console.error("Error creating table body:", error);
@@ -168,4 +172,21 @@ function toDate(objs) {
         let temp2 = obj["Birth_Date"].toString();
         obj["Birth_Date"] = temp2.slice(6, 10) + "/" + temp2.slice(0, 5);
     }
+}
+
+function updateDotPlot(selectedPlayer, selectedNation) {
+    console.log(selectedPlayer);
+
+    // remove existing name tag
+    d3.select("#name-tag").remove();
+
+    // select the corresponding dot in the dot plot
+    d3.selectAll(".dot")
+        .classed("selected", d => d.Name === selectedPlayer)
+        .attr("fill", d => (d.Name === selectedPlayer) ? "coral" : "black")
+        .attr("r", d => (d.Name === selectedPlayer) ? 5 : 2);
+
+    d3.selectAll('.bar')
+        .classed('selected', d => d.key === selectedNation)
+        .attr('fill', d => (d.key === selectedNation) ? 'coral' : 'steelblue');
 }

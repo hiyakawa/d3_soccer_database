@@ -38,7 +38,7 @@ function createBarDropdown(data) {
 function createBarPlot(data, curAttr) {
     // remove existing plot if any
     const barPlotContainer = d3.select("#bar-plot-container");
-    d3.select('#bar-plot-container').selectAll('*').remove();
+    d3.select("#bar-plot-container").selectAll("*").remove();
 
     // set the dimensions and margins of the graph
     const margin = {top: 30, right: 30, bottom: 70, left: 60},
@@ -125,6 +125,16 @@ function createDotPlot(data, xAttr, yAttr) {
         .domain([d3.min(data, d => d[yAttr]), d3.max(data, d => d[yAttr])])
         .rangeRound([height, 0]);
 
+    // create grid lines for the y-axis
+    svgContainer.append("g")
+        .attr("class", "grid-lines")
+        .call(d3.axisLeft(yScale)
+            .tickSize(-800) // adjust the size of the grid lines
+            .tickFormat("")
+        )
+        .selectAll("line")
+            .attr("stroke", "lightgray");
+
     // create dots
     svgContainer.selectAll(".dot")
         .data(data)
@@ -133,7 +143,7 @@ function createDotPlot(data, xAttr, yAttr) {
         .attr("class", "dot")
         .attr("cx", d => xScale(d[xAttr]) + xScale.bandwidth() / 2)
         .attr("cy", d => yScale(d[yAttr]))
-        .attr("r", 2); // radius of the dots
+        .attr("r", 2) // radius of the dots
 
     // add x-axis
     svgContainer.append("g")
@@ -188,7 +198,7 @@ function createDotPlot(data, xAttr, yAttr) {
 
     function updateDotPlot(xAttr, yAttr) {
         // remove existing plot if any
-        d3.select('#dot-plot-container').selectAll('*').remove();
+        d3.select("#dot-plot-container").selectAll("*").remove();
 
         // sort the data by xAttr
         data.sort(function (a, b) {
@@ -213,6 +223,16 @@ function createDotPlot(data, xAttr, yAttr) {
         let yScale = d3.scaleLinear()
             .domain([d3.min(data, d => d[yAttr]), d3.max(data, d => d[yAttr])])
             .rangeRound([height, 0]);
+
+        // create grid lines for the y-axis
+        svgContainer.append("g")
+            .attr("class", "grid-lines")
+            .call(d3.axisLeft(yScale)
+                .tickSize(-800) // adjust the size of the grid lines
+                .tickFormat("")
+            )
+            .selectAll("line")
+                .attr("stroke", "lightgray");
 
         // create dots
         svgContainer.selectAll(".dot")

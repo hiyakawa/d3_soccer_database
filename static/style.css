@@ -44,7 +44,7 @@ body {
 }
 
 .player-table thead th:hover {
-    background-color: coral;
+    background-color: steelblue;
 }
 
 .player-table thead tr.active {
@@ -53,4 +53,8 @@ body {
 
 .bar {
     fill: steelblue;
+}
+
+.selected {
+  background-color: lightblue;
 }
